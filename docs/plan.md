@@ -54,10 +54,13 @@
 ## Phase 5. 배포 및 인프라 구성
 
 - AWS RDS(MySQL) 구성 — 비용 제약(NFR-03, TR-07)에 맞는 최소 사양 선택
+- AWS S3 버킷 준비, 상품 이미지 수동 업로드 및 이미지 URL을 상품 데이터에 반영 — TR-10
 - AWS Secrets Manager에 운영 시크릿 등록 (NFR-05, TR-09) — DB 자격증명 + Toss 시크릿 키를 하나의 JSON 시크릿으로 통합해 비용 최소화
 - `spring-cloud-aws-starter-secrets-manager` 의존성 추가 및 `application-prod.yml`에 `spring.config.import=aws-secretsmanager:...` 설정
-- 배포 환경(EC2/ECS 등)에 Secrets Manager 읽기 권한을 가진 IAM 역할 부여
-- 애플리케이션 배포 (구체 호스팅 방식은 비용 제약 하에서 별도 결정 필요 — TBD)
+- 배포 환경(EC2)에 Secrets Manager 읽기 권한을 가진 IAM 역할 부여
+- AWS ECR에 컨테이너 이미지 push 후 EC2 단일 인스턴스에서 Docker로 pull & 실행 (1단계, TR-11). ECS/EKS 확장은 이후 트래픽/예산에 따라 별도 검토
+- GitHub Actions로 CI/CD 파이프라인 구성 (빌드 → ECR push → EC2 배포) — TR-13
+- 컨테이너 로그를 CloudWatch Logs로 전송(`--log-driver=awslogs`)하고 CloudWatch Logs Insights로 조회 가능하도록 구성 — TR-12
 - 배포 환경에서 시딩 API(FR-06) 호출로 초기 데이터 적재
 - 배포 환경에서 Phase 4와 동일한 전체 플로우 재검증
 

@@ -45,6 +45,10 @@
 | TR-07 | 인프라 비용 | 월 $5 이하 제약에 맞는 저비용 구성(RDS 최소 사양 등) 선택 필요. AWS Secrets Manager 비용(시크릿당 월 $0.40 + API 호출 비용)도 이 예산에 포함되므로, 시크릿 개수를 최소화한다(예: DB 자격증명 + Toss 키를 하나의 JSON 시크릿으로 통합) |
 | TR-08 | API 명세서 | Swagger(springdoc-openapi)로 API 문서를 자동 생성하고 `/swagger-ui.html`로 제공 |
 | TR-09 | 민감정보 연동 방식 | `application-local.yml`(로컬) / `application-prod.yml`(운영) 프로파일로 설정을 분리한다. 운영 프로파일에서는 `spring-cloud-aws-starter-secrets-manager`로 AWS Secrets Manager의 시크릿을 Spring `PropertySource`로 자동 주입한다 |
+| TR-10 | 미디어 저장 | 상품 이미지는 AWS S3에 저장한다. 운영자가 최초 상품 등록 시 콘솔/CLI로 1회성 수동 업로드하며, 업로드/관리를 위한 API는 제공하지 않는다. 이미지 URL은 상품 테이블에 직접 기록한다 |
+| TR-11 | 배포 방식 | 컨테이너 방식으로 배포한다. 1단계는 AWS ECR에 이미지를 push하고 EC2 단일 인스턴스에서 Docker로 pull & 실행하는 구성이다. ECS/EKS로의 확장은 향후 트래픽/예산에 따라 별도 검토하며 현재는 착수하지 않는다 |
+| TR-12 | 로깅/모니터링 | Spring Boot 표준 Logback 콘솔(stdout) 출력을 사용하며, 컨테이너 실행 시 `--log-driver=awslogs`로 CloudWatch Logs에 전송한다. 로그 조회는 CloudWatch Logs Insights를 사용하고, 예외도 표준 로그로 남기므로 별도 에러 추적 도구(Sentry 등)는 사용하지 않는다. ELK 스택 전환은 추후 TODO로 남긴다 |
+| TR-13 | CI/CD | GitHub Actions로 구성한다. 별도 서버(Jenkins 등) 없이 리포지토리에 붙는 방식으로, 빌드 → 컨테이너 이미지 ECR push → EC2 배포까지의 파이프라인을 목표로 한다 |
 
 ## UI/UX
 
