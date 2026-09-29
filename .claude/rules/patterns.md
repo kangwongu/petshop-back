@@ -379,6 +379,9 @@ public record ProductResCommand(
 ```
 
 ### Controller Layer (API Request / Response)
+
+- 공통 응답 포맷(BaseRes)은 현재 사용하지 않는다. 컨트롤러는 Res DTO 또는 `List`/`PaginateData`를 직접 반환한다. 공통 응답 래퍼 도입 여부는 추후 별도로 결정한다.
+
 ```java
 @RestController
 @RequestMapping("/products")
@@ -387,22 +390,20 @@ public class ProductController {
     private final GetProductUseCase getProductUseCase;
 
     @GetMapping("/{seq}")
-    public BaseRes<ProductRes> findBySeq(
+    public ProductRes findBySeq(
             @PathVariable Integer seq
     ) {
-        return BaseRes.from(ProductRes.fromCommand(
+        return ProductRes.fromCommand(
                 getProductUseCase.findBySeq(seq)
-        ));
+        );
     }
 
     @GetMapping
-    public BaseRes<PaginateData<ProductRes>> findPage(
+    public PaginateData<ProductRes> findPage(
             @Valid @ParameterObject GetProductReq req
     ) {
-        return BaseRes.from(
-                getProductUseCase.findPage(req.toCommand())
-                        .mapToContent(ProductRes::fromCommand)
-        );
+        return getProductUseCase.findPage(req.toCommand())
+                .mapToContent(ProductRes::fromCommand);
     }
 }
 ```
@@ -459,13 +460,11 @@ public class ProductController {
     private final GetProductUseCase getProductUseCase;
 
     @GetMapping
-    public BaseRes<PaginateData<ProductRes>> findPage(
+    public PaginateData<ProductRes> findPage(
             @Valid @ParameterObject GetProductReq req
     ) {
-        return BaseRes.from(
-                getProductUseCase.findPage(req.toCommand())
-                        .mapToContent(ProductRes::fromCommand)
-        );
+        return getProductUseCase.findPage(req.toCommand())
+                .mapToContent(ProductRes::fromCommand);
     }
 }
 ```
