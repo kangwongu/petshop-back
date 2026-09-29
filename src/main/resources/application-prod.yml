@@ -1,0 +1,14 @@
+# 운영(prod) 프로파일 자리 마련용 파일.
+# 실제 값(AWS Secrets Manager 연동, RDS 접속 정보 등)은 Phase 5(배포 및 인프라 구성)에서 채운다.
+#
+# 예정된 구성 (TR-09):
+# spring:
+#   config:
+#     import: "aws-secretsmanager:petshop/prod"
+#   datasource:
+#     url: ${infra.db-url}
+#     username: ${infra.db-username}
+#     password: ${infra.db-password}
+#   jpa:
+#     hibernate:
+#       ddl-auto: none
