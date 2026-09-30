@@ -4,6 +4,7 @@ import com.ddungyomi.petshop.domain.order.application.command.req.OrderItemReqCo
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Schema(description = "주문 상품 항목 요청 DTO")
 public record OrderItemReq(
@@ -13,6 +14,7 @@ public record OrderItemReq(
 
         @Schema(description = "수량", example = "2")
         @NotNull
+        @Positive
         Integer quantity
 ) {
     public OrderItemReqCommand toCommand() {
