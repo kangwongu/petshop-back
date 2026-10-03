@@ -14,9 +14,7 @@ import com.ddungyomi.petshop.domain.payment.application.port.in.ProcessPaymentWe
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
@@ -34,11 +32,6 @@ public class PaymentController {
     @Operation(summary = "결제 웹훅 수신", description = "Toss 결제 상태 변경 웹훅을 수신해 재조회 결과를 반영한다. (FR-05)")
     @PostMapping("/webhook")
     public void webhook(@RequestBody PaymentWebhookReq req) {
-        try {
-            processPaymentWebhookUseCase.process(req.toCommand());
-        } catch (Exception exception) {
-            // Toss는 실패 응답을 받으면 웹훅을 재발송하므로, 처리 중 오류가 나도 로그만 남기고 200으로 응답한다
-            log.warn("웹훅 처리 중 오류 발생. eventType={}", req.eventType(), exception);
-        }
+        processPaymentWebhookUseCase.process(req.toCommand());
     }
 }
