@@ -32,10 +32,10 @@ public record Payment(
         );
     }
 
-    public Payment cancel() {
+    public Payment cancel(Long canceledEpoch) {
         return new Payment(
                 this.seq, this.orderSeq, this.paymentKey, this.amount, PaymentStatus.CANCELLED,
-                this.failReason, this.approvedEpoch, this.createEpoch, System.currentTimeMillis()
+                this.failReason, this.approvedEpoch, this.createEpoch, canceledEpoch
         );
     }
 }

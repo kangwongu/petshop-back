@@ -75,7 +75,7 @@ public class PaymentWriteService implements CreatePaymentUseCase, ProcessPayment
         if (TOSS_STATUS_DONE.equals(result.status())) {
             handleDone(command, result.approvedEpoch());
         } else if (TOSS_STATUS_CANCELED.equals(result.status())) {
-            handleCanceled(command);
+            handleCanceled(command, result.canceledEpoch());
         } else {
             log.info("웹훅 반영 대상이 아닌 상태 수신. paymentKey={}, status={}", command.paymentKey(), result.status());
         }
@@ -98,7 +98,7 @@ public class PaymentWriteService implements CreatePaymentUseCase, ProcessPayment
         savePaymentPort.save(newPayment);
     }
 
-    private void handleCanceled(PaymentWebhookReqCommand command) {
+    private void handleCanceled(PaymentWebhookReqCommand command, Long canceledEpoch) {
         Payment payment = getPaymentPort.findNullableByPaymentKey(command.paymentKey());
         if (payment == null || payment.status() != PaymentStatus.PAID) {
             log.info(
@@ -110,6 +110,6 @@ public class PaymentWriteService implements CreatePaymentUseCase, ProcessPayment
 
         Order order = getOrderPort.findByOrderNumber(command.orderId());
         saveOrderPort.save(order.cancel());
-        savePaymentPort.save(payment.cancel());
+        savePaymentPort.save(payment.cancel(canceledEpoch));
     }
 }

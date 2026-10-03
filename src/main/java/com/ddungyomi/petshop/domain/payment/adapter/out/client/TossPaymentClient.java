@@ -63,7 +63,10 @@ public class TossPaymentClient implements ConfirmPaymentClientPort, GetPaymentSt
             Long approvedEpoch = response.approvedAt() != null
                     ? OffsetDateTime.parse(response.approvedAt()).toInstant().toEpochMilli()
                     : null;
-            return new TossPaymentStatusResult(response.status(), approvedEpoch);
+            Long canceledEpoch = response.cancels() != null && !response.cancels().isEmpty()
+                    ? OffsetDateTime.parse(response.cancels().getLast().canceledAt()).toInstant().toEpochMilli()
+                    : null;
+            return new TossPaymentStatusResult(response.status(), approvedEpoch, canceledEpoch);
         } catch (RestClientResponseException exception) {
             throw new TossConfirmFailedException(resolveErrorMessage(exception));
         }

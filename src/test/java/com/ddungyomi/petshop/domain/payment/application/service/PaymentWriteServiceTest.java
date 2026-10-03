@@ -133,7 +133,7 @@ class PaymentWriteServiceTest {
         when(getOrderPort.findByOrderNumber(order.orderNumber())).thenReturn(order);
         when(getPaymentPort.findNullableByPaymentKey("paymentKey1")).thenReturn(null);
         when(getPaymentStatusClientPort.findByPaymentKey("paymentKey1"))
-                .thenReturn(new TossPaymentStatusResult("DONE", 1700000000000L));
+                .thenReturn(new TossPaymentStatusResult("DONE", 1700000000000L, null));
         when(savePaymentPort.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         paymentWriteService.process(PaymentWebhookReqCommand.from("paymentKey1", order.orderNumber()));
@@ -152,7 +152,7 @@ class PaymentWriteServiceTest {
         Payment existingPayment = Payment.create(1, "paymentKey1", 25000L).confirm(1700000000000L);
         when(getPaymentPort.findNullableByPaymentKey("paymentKey1")).thenReturn(existingPayment);
         when(getPaymentStatusClientPort.findByPaymentKey("paymentKey1"))
-                .thenReturn(new TossPaymentStatusResult("DONE", 1700000000000L));
+                .thenReturn(new TossPaymentStatusResult("DONE", 1700000000000L, null));
 
         paymentWriteService.process(PaymentWebhookReqCommand.from("paymentKey1", "ORD-1"));
 
@@ -167,7 +167,7 @@ class PaymentWriteServiceTest {
         Payment paidPayment = Payment.create(1, "paymentKey1", 25000L).confirm(1700000000000L);
         when(getPaymentPort.findNullableByPaymentKey("paymentKey1")).thenReturn(paidPayment);
         when(getPaymentStatusClientPort.findByPaymentKey("paymentKey1"))
-                .thenReturn(new TossPaymentStatusResult("CANCELED", 1700000000000L));
+                .thenReturn(new TossPaymentStatusResult("CANCELED", null, 1700000001000L));
         when(getOrderPort.findByOrderNumber(paidOrder.orderNumber())).thenReturn(paidOrder);
         when(savePaymentPort.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -176,6 +176,7 @@ class PaymentWriteServiceTest {
         ArgumentCaptor<Payment> paymentCaptor = ArgumentCaptor.forClass(Payment.class);
         verify(savePaymentPort, times(1)).save(paymentCaptor.capture());
         assertThat(paymentCaptor.getValue().status()).isEqualTo(PaymentStatus.CANCELLED);
+        assertThat(paymentCaptor.getValue().updateEpoch()).isEqualTo(1700000001000L);
 
         ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
         verify(saveOrderPort, times(1)).save(orderCaptor.capture());
@@ -186,7 +187,7 @@ class PaymentWriteServiceTest {
     void process_CANCELED_재조회_결과인데_Payment가_없으면_아무것도_하지_않는다() {
         when(getPaymentPort.findNullableByPaymentKey("paymentKey1")).thenReturn(null);
         when(getPaymentStatusClientPort.findByPaymentKey("paymentKey1"))
-                .thenReturn(new TossPaymentStatusResult("CANCELED", null));
+                .thenReturn(new TossPaymentStatusResult("CANCELED", null, null));
 
         paymentWriteService.process(PaymentWebhookReqCommand.from("paymentKey1", "ORD-1"));
 
@@ -197,10 +198,11 @@ class PaymentWriteServiceTest {
 
     @Test
     void process_CANCELED_재조회_결과인데_이미_CANCELLED면_멱등하게_아무것도_하지_않는다() {
-        Payment cancelledPayment = Payment.create(1, "paymentKey1", 25000L).confirm(1700000000000L).cancel();
+        Payment cancelledPayment = Payment.create(1, "paymentKey1", 25000L)
+                .confirm(1700000000000L).cancel(1700000001000L);
         when(getPaymentPort.findNullableByPaymentKey("paymentKey1")).thenReturn(cancelledPayment);
         when(getPaymentStatusClientPort.findByPaymentKey("paymentKey1"))
-                .thenReturn(new TossPaymentStatusResult("CANCELED", 1700000000000L));
+                .thenReturn(new TossPaymentStatusResult("CANCELED", null, 1700000001000L));
 
         paymentWriteService.process(PaymentWebhookReqCommand.from("paymentKey1", "ORD-1"));
 
@@ -212,7 +214,7 @@ class PaymentWriteServiceTest {
     @Test
     void process_그_외_상태는_반영하지_않는다() {
         when(getPaymentStatusClientPort.findByPaymentKey("paymentKey1"))
-                .thenReturn(new TossPaymentStatusResult("ABORTED", null));
+                .thenReturn(new TossPaymentStatusResult("ABORTED", null, null));
 
         paymentWriteService.process(PaymentWebhookReqCommand.from("paymentKey1", "ORD-1"));
 
