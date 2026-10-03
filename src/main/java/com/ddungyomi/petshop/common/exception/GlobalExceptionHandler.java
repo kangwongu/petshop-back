@@ -19,6 +19,12 @@ public class GlobalExceptionHandler {
                 .body(ErrorRes.from(exception.getMessage()));
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorRes> handleBadRequestException(BadRequestException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorRes.from(exception.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorRes> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         String message = exception.getBindingResult().getFieldErrors().stream()
