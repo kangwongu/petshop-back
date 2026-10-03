@@ -8,3 +8,7 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+
+toss:
+  client-key: test_ck_Z1aOwX7K8m1o9zx5Y12j8yQxzvNP
+  secret-key: test_sk_Z61JOxRQVEzl5X01eBa2rW0X9bAq
