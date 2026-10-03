@@ -53,10 +53,11 @@ public class OrderJpaEntity {
     private Long updateEpoch;
 
     public static OrderJpaEntity create(
-            String orderNumber, String buyerName, String buyerPhone, String buyerAddress,
+            Integer seq, String orderNumber, String buyerName, String buyerPhone, String buyerAddress,
             Long totalAmount, OrderStatus status, Long createEpoch, Long updateEpoch
     ) {
         OrderJpaEntity entity = new OrderJpaEntity();
+        entity.seq = seq;
         entity.orderNumber = orderNumber;
         entity.buyerName = buyerName;
         entity.buyerPhone = buyerPhone;

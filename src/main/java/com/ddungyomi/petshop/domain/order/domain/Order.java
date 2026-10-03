@@ -36,6 +36,30 @@ public record Order(
         );
     }
 
+    public Order pay() {
+        return new Order(
+                this.seq, this.orderNumber, this.buyerName, this.buyerPhone, this.buyerAddress,
+                this.totalAmount, OrderStatus.PAID, this.orderItemList,
+                this.createEpoch, System.currentTimeMillis()
+        );
+    }
+
+    public Order fail() {
+        return new Order(
+                this.seq, this.orderNumber, this.buyerName, this.buyerPhone, this.buyerAddress,
+                this.totalAmount, OrderStatus.FAILED, this.orderItemList,
+                this.createEpoch, System.currentTimeMillis()
+        );
+    }
+
+    public Order cancel() {
+        return new Order(
+                this.seq, this.orderNumber, this.buyerName, this.buyerPhone, this.buyerAddress,
+                this.totalAmount, OrderStatus.CANCELLED, this.orderItemList,
+                this.createEpoch, System.currentTimeMillis()
+        );
+    }
+
     private static String generateOrderNumber() {
         String timestamp = LocalDateTime.now().format(ORDER_NUMBER_TIMESTAMP_FORMAT);
         String suffix = ThreadLocalRandom.current()

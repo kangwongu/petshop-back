@@ -25,6 +25,7 @@ public class OrderMapper {
 
     public static OrderJpaEntity mapToJpaEntity(Order order) {
         return OrderJpaEntity.create(
+                order.seq(),
                 order.orderNumber(),
                 order.buyerName(),
                 order.buyerPhone(),
