@@ -59,6 +59,8 @@
 - `spring-cloud-aws-starter-secrets-manager` 의존성 추가 및 `application-prod.yml`에 `spring.config.import=aws-secretsmanager:...` 설정
 - 배포 환경(EC2)에 Secrets Manager 읽기 권한을 가진 IAM 역할 부여
 - AWS ECR에 컨테이너 이미지 push 후 EC2 단일 인스턴스에서 Docker로 pull & 실행 (1단계, TR-11). ECS/EKS 확장은 이후 트래픽/예산에 따라 별도 검토
+- EC2에 Elastic IP를 고정 연결하고 Route53으로 도메인을 연결, Nginx 리버스 프록시 + Let's Encrypt(Certbot)로 HTTPS 적용 (ALB는 비용 제약상 사용하지 않음 — NFR-03, TR-07)
+- 프론트엔드(Vercel 배포) 도메인을 허용 오리진으로 하는 운영 CORS 설정 추가
 - GitHub Actions로 CI/CD 파이프라인 구성 (빌드 → ECR push → EC2 배포) — TR-13
 - 컨테이너 로그를 CloudWatch Logs로 전송(`--log-driver=awslogs`)하고 CloudWatch Logs Insights로 조회 가능하도록 구성 — TR-12
 - 배포 환경에서 시딩 API(FR-06) 호출로 초기 데이터 적재
