@@ -49,6 +49,7 @@
 | TR-11 | 배포 방식 | 컨테이너 방식으로 배포한다. 1단계는 AWS ECR에 이미지를 push하고 EC2 단일 인스턴스에서 Docker로 pull & 실행하는 구성이다. ECS/EKS로의 확장은 향후 트래픽/예산에 따라 별도 검토하며 현재는 착수하지 않는다 |
 | TR-12 | 로깅/모니터링 | Spring Boot 표준 Logback 콘솔(stdout) 출력을 사용하며, 컨테이너 실행 시 `--log-driver=awslogs`로 CloudWatch Logs에 전송한다. 로그 조회는 CloudWatch Logs Insights를 사용하고, 예외도 표준 로그로 남기므로 별도 에러 추적 도구(Sentry 등)는 사용하지 않는다. ELK 스택 전환은 추후 TODO로 남긴다 |
 | TR-13 | CI/CD | GitHub Actions로 구성한다. 별도 서버(Jenkins 등) 없이 리포지토리에 붙는 방식으로, 빌드 → 컨테이너 이미지 ECR push → EC2 배포까지의 파이프라인을 목표로 한다 |
+| TR-14 | 결제 정합성 보강 (TODO) | Toss 웹훅은 처리 실패 시 재시도되지만(FR-05), 재시도가 모두 실패하면 결제 상태가 영구적으로 불일치할 수 있다. `paymentKey`/`orderId` 기준 능동적 재조회(reconciliation) 배치로 보강하는 방안을 추후 검토하며, 현재는 착수하지 않는다 |
 
 ## UI/UX
 
