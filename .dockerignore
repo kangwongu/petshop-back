@@ -1,0 +1,21 @@
+# Dockerfile의 COPY 대상에서 제외할 파일들.
+# 빌드 컨텍스트를 줄여서 docker build 속도를 높이고,
+# 불필요하거나 민감할 수 있는 파일이 이미지에 들어가는 걸 막는다.
+
+.git
+.gradle
+build
+.claude
+
+# 로컬 IDE 설정
+.idea
+*.iml
+.vscode
+
+# 문서는 런타임에 전혀 필요 없음
+docs
+README.md
+CLAUDE.md
+
+# 로컬 전용 설정(민감정보 포함 가능성) — prod는 Secrets Manager로 주입받음
+src/main/resources/application-local.yml
