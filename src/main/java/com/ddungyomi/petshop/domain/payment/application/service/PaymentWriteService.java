@@ -59,12 +59,22 @@ public class PaymentWriteService implements CreatePaymentUseCase, ProcessPayment
             Payment payment = Payment.create(order.seq(), command.paymentKey(), command.amount())
                     .confirm(approvedEpoch);
             saveOrderPort.save(order.pay());
-            return PaymentResCommand.from(savePaymentPort.save(payment));
+            PaymentResCommand result = PaymentResCommand.from(savePaymentPort.save(payment));
+            log.info(
+                    "결제 승인 완료. orderId={}, paymentKey={}, amount={}",
+                    command.orderId(), command.paymentKey(), command.amount()
+            );
+            return result;
         } catch (TossConfirmFailedException exception) {
             Payment payment = Payment.create(order.seq(), command.paymentKey(), command.amount())
                     .fail(exception.getMessage());
             saveOrderPort.save(order.fail());
-            return PaymentResCommand.from(savePaymentPort.save(payment));
+            PaymentResCommand result = PaymentResCommand.from(savePaymentPort.save(payment));
+            log.error(
+                    "결제 승인 실패. orderId={}, paymentKey={}, amount={}",
+                    command.orderId(), command.paymentKey(), command.amount(), exception
+            );
+            return result;
         }
     }
 

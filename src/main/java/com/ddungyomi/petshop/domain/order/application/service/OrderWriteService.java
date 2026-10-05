@@ -15,7 +15,9 @@ import com.ddungyomi.petshop.domain.product.application.port.out.GetProductPort;
 import com.ddungyomi.petshop.domain.product.domain.Product;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -37,6 +39,11 @@ public class OrderWriteService implements CreateOrderUseCase {
                 command.buyerName(), command.buyerPhone(), command.buyerAddress(), orderItemList
         );
 
-        return OrderResCommand.from(saveOrderPort.save(order));
+        Order savedOrder = saveOrderPort.save(order);
+        log.info(
+                "주문 생성 완료. orderNumber={}, totalAmount={}",
+                savedOrder.orderNumber(), savedOrder.totalAmount()
+        );
+        return OrderResCommand.from(savedOrder);
     }
 }
