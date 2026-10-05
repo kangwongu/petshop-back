@@ -45,7 +45,7 @@
 - 트랜잭션 경계는 `application/service`에 위치한다.
 - DTO(req/res)는 Controller 경계, Command는 Application 경계, 영속 Entity는 `adapter.out.persistence` 경계에 둔다.
 - 세부 패키지 규칙은 `architecture.md`를 따른다.
-- 월 운영비 $5 이하, 유지보수 인원 1명 제약 하에 **과설계를 지양**하고 단순한 구조를 우선한다.
+- 월 운영비 $10 이하, 유지보수 인원 1명 제약 하에 **과설계를 지양**하고 단순한 구조를 우선한다.
 
 ---
 

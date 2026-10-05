@@ -28,7 +28,7 @@
 |---|---|---|
 | NFR-01 | 결제 정합성 | 결제 승인 전 클라이언트가 보낸 금액과 서버의 주문 총액이 반드시 일치해야 하며, 불일치 시 Toss 승인 API를 호출하지 않는다 |
 | NFR-02 | 웹훅 멱등성 | 동일한 결제 건에 대한 중복 웹훅 수신 시에도 상태가 중복 반영되지 않는다 |
-| NFR-03 | 비용 효율성 | 월 운영 비용 $5 이하를 유지할 수 있는 인프라/리소스 사이징을 전제로 한다 |
+| NFR-03 | 비용 효율성 | 월 운영 비용 $10 이하를 유지할 수 있는 인프라/리소스 사이징을 전제로 한다 |
 | NFR-04 | 유지보수 용이성 | 유지보수 인원 1명이 무리 없이 이해·수정할 수 있는 단순한 구조를 유지하며, 과설계를 지양한다 |
 | NFR-05 | 민감정보 관리 | 결제 시크릿 키, DB 자격증명 등 민감정보는 코드에 포함하지 않는다. 운영 환경은 AWS Secrets Manager로 관리하며, `application-local.yml`/`application-prod.yml`은 실제 시크릿 값을 담지 않으므로 git으로 관리한다 |
 
@@ -42,7 +42,7 @@
 | TR-04 | 결제 연동 | Toss Payments, 별도 SDK 없이 Spring RestClient로 직접 연동 |
 | TR-05 | 아키텍처 | Hexagonal (Ports & Adapters) — 세부 컨벤션은 별도 문서로 추후 제공 예정 |
 | TR-06 | API 계약 고정 | 이미 구현된 프론트엔드(petshop-frontend-prev)가 기대하는 엔드포인트/요청·응답 형식을 그대로 준수해야 하며 임의 변경 불가 |
-| TR-07 | 인프라 비용 | 월 $5 이하 제약에 맞는 저비용 구성(RDS 최소 사양 등) 선택 필요. AWS Secrets Manager 비용(시크릿당 월 $0.40 + API 호출 비용)도 이 예산에 포함되므로, 시크릿 개수를 최소화한다(예: DB 자격증명 + Toss 키를 하나의 JSON 시크릿으로 통합) |
+| TR-07 | 인프라 비용 | 월 $10 이하 제약에 맞는 저비용 구성(RDS 최소 사양 등) 선택 필요. AWS Secrets Manager 비용(시크릿당 월 $0.40 + API 호출 비용)도 이 예산에 포함되므로, 시크릿 개수를 최소화한다(예: DB 자격증명 + Toss 키를 하나의 JSON 시크릿으로 통합) |
 | TR-08 | API 명세서 | Swagger(springdoc-openapi)로 API 문서를 자동 생성하고 `/swagger-ui.html`로 제공 |
 | TR-09 | 민감정보 연동 방식 | `application-local.yml`(로컬) / `application-prod.yml`(운영) 프로파일로 설정을 분리한다. 운영 프로파일에서는 `spring-cloud-aws-starter-secrets-manager`로 AWS Secrets Manager의 시크릿을 Spring `PropertySource`로 자동 주입한다 |
 | TR-10 | 미디어 저장 | 상품 이미지는 AWS S3에 저장한다. 운영자가 최초 상품 등록 시 콘솔/CLI로 1회성 수동 업로드하며, 업로드/관리를 위한 API는 제공하지 않는다. 이미지 URL은 상품 테이블에 직접 기록한다 |

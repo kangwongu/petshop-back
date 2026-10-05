@@ -55,7 +55,7 @@
 - **스택**: Java 25, Spring Boot 4.1.1, JPA, MySQL(로컬/운영 공통, 운영은 AWS RDS), Toss Payments(별도 SDK 없이 Spring RestClient로 직접 연동)
 - **아키텍처**: Hexagonal (Ports & Adapters) — 세부 패키지 컨벤션은 아직 미확정 상태이며 우선 표준 골격으로 시작 중 (`docs/plan.md` 참고)
 - **인증**: 없음 — 비회원(게스트) 체크아웃만 지원
-- **제약**: 월 운영비 $5 이하, 유지보수 인원 1명 → 과설계 지양, 단순한 구조 우선
+- **제약**: 월 운영비 $10 이하, 유지보수 인원 1명 → 과설계 지양, 단순한 구조 우선
 - **범위 제외**: 회원가입/로그인, 장바구니 서버 측 저장, 재고 관리, 결제 취소/환불, 관리자 기능
 - **API 계약 고정**: 기존 프론트엔드(`petshop-frontend-prev`)가 기대하는 엔드포인트/요청·응답 포맷을 그대로 준수 (임의 변경 불가)
 - **참고 문서**: `docs/constitution.md`(목적·성공기준·제약), `docs/specification.md`(FR/NFR/TR 요구사항 ID), `docs/plan.md`(Phase별 구현 순서), `docs/phase0-todo.md`(현재 진행 중인 Phase 0 체크리스트)
