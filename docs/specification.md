@@ -51,7 +51,7 @@
 | TR-13 | CI/CD | GitHub Actions로 구성한다. 별도 서버(Jenkins 등) 없이 리포지토리에 붙는 방식으로, 빌드 → 컨테이너 이미지 ECR push → EC2 배포까지의 파이프라인을 목표로 한다 |
 | TR-14 | 결제 정합성 보강 (TODO) | Toss 웹훅은 처리 실패 시 재시도되지만(FR-05), 재시도가 모두 실패하면 결제 상태가 영구적으로 불일치할 수 있다. `paymentKey`/`orderId` 기준 능동적 재조회(reconciliation) 배치로 보강하는 방안을 추후 검토하며, 현재는 착수하지 않는다 |
 | TR-15 | 재고 도메인 및 동시성 제어 (TODO) | 인기 상품 동시 주문 시 재고 경합(overselling)을 다루는 동시성 제어 학습을 위해, 재고(Inventory) 도메인 추가와 동시성 제어(낙관적 락/비관적 락/조건부 UPDATE 등) 적용을 향후 별도로 검토한다. 현재는 범위 제외 상태이며 착수하지 않는다 |
-| TR-16 | 네트워크/배포 단계적 고도화 (TODO) | Phase 5의 1단계 구성(NAT Gateway 미사용, ELB 미사용, EC2+ECR)은 비용 제약과 컨테이너 배포 학습을 위한 시작점이다. 컨테이너 배포 방식(ECR push → EC2 pull & 실행, TR-11)에 익숙해진 뒤 NAT Gateway, ELB(ALB) 도입과 EC2+ECR → ECS로의 마이그레이션을 단계적으로 진행할 계획이다. 현재는 범위 제외 상태이며 착수하지 않는다 |
+| TR-16 | 네트워크/배포 단계적 고도화 (TODO) | Phase 5의 1단계 구성(NAT Gateway 미사용, ELB 미사용, EC2 public subnet+ECR)은 비용 제약과 컨테이너 배포 학습을 위한 시작점이다. 초기 구성 완료 후 다음 순서로 실무형 구성을 단계적으로 체험할 계획이다: (1) NAT Gateway 추가 + EC2를 private subnet으로 이동하고 Bastion Host를 통해 접근하는 구성, (2) ALB(ELB) 도입, (3) EC2+ECR → ECS로의 마이그레이션. 각 단계는 NFR-03(월 $10 이하) 제약을 일시적으로 초과하는 학습용 실습으로 진행하며, 현재는 범위 제외 상태이고 착수하지 않는다 |
 
 ## UI/UX
 
