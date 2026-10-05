@@ -1,4 +1,9 @@
 spring:
+  cloud:
+    aws:
+      secretsmanager:
+        enabled: false
+
   datasource:
     url: jdbc:mysql://localhost:3306/petshop
     username: root
