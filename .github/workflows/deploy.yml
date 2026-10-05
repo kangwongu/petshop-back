@@ -54,5 +54,10 @@ jobs:
             docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest &&
             docker stop petshop-prod || true &&
             docker rm petshop-prod || true &&
-            docker run -d -p 8080:8080 --name petshop-prod ${{ secrets.ECR_REPOSITORY_URI }}:latest
+            docker run -d -p 8080:8080 --name petshop-prod \
+              --log-driver=awslogs \
+              --log-opt awslogs-region=${{ secrets.AWS_REGION }} \
+              --log-opt awslogs-group=/petshop/prod \
+              --log-opt awslogs-create-group=true \
+              ${{ secrets.ECR_REPOSITORY_URI }}:latest
           '
